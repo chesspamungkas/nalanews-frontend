@@ -1,0 +1,62 @@
+<div *ngIf="blog.loading || blog.error" class="container noBlog">
+    {{ blog.loading ? 'Loading...' : blog.error }}
+</div>
+
+<div class="img-section" *ngIf="blog.data">
+    <img [src]="blog.data.cover_image" alt="">
+</div>
+
+<div class="container" *ngIf="blog.data">
+    <div class="row py-5">
+
+        <div class="col-md-2 col-12 author mb-4">
+            <p class="section-title"> <i class="fa fa-user-circle-o" aria-hidden="true"></i> Author</p>
+            <div class="card">
+                <div class="card-body text-center">
+                    <b>
+                        {{ blog.data.author?.first_name }}
+                    </b>
+                  <br>
+                  <div class="d-grid mt-2 gap-2">
+                    <a class="btn btn-sm" [routerLink]="['/profile', blog.data.author?._id]">View profile</a>
+                  </div>
+                </div>
+              </div>
+        </div>
+        
+        <div class="col-md-7 col-12">
+
+            <p *ngIf="blog.error || blog.loading">
+                {{ blog.error }}
+                {{ blog.loading ? 'Loading blog...' : '' }}
+            </p>
+
+            <!-- blog -->
+            <h3> 
+                {{ blog.data.title | titlecase }}
+            </h3>
+            <p>
+                <i class="me-2">
+                    <i class="fa fa-bookmark me-1" aria-hidden="true"></i> {{ blog.data.category.category | titlecase }}
+                </i>
+                <i>
+                    <i class="fa fa-calendar mx-1" aria-hidden="true"></i> {{ blog.data.published }}
+                </i>
+            </p>
+            <p>
+                <a href="{{blog.data.external_link}}" target="_blank"> {{ blog.data.external_link }}</a>
+            </p>
+            <p class="blogBody">
+                {{ blog.data.body }}
+            </p>
+            <p class="blogExcerpt">
+                {{ blog.data.excerpt }}
+            </p>
+        </div>
+
+        <div class="col-md-3 col-12">
+            <app-category-component></app-category-component>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,109 @@
+<div class="card bgLight">
+    <div class="container py-5">
+        <div class="card-body">
+            <p *ngIf="authorProfile.loading">
+                Getting blogger data...
+            </p>
+            <small *ngIf="authorProfile.error" class="text-danger">
+               <b>ERROR</b> {{ authorProfile.error }}!
+            </small>
+            <div class="row profile" *ngIf="!authorProfile.error && !authorProfile.loading">
+
+                <div class="col-md-2 col-12 my-2">
+
+                    <div class="imgCap">
+                        <img [src]="authorProfile.data.profile_image" alt="Profile image">
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-12 my-2" *ngIf="authorProfile.data">
+                    <h3>
+                        <b> {{ authorProfile.data.first_name }} {{ authorProfile.data.last_name }} </b>
+                    </h3>
+                    <h4>
+                        <i class="fa fa-envelope me-1" aria-hidden="true"></i> {{ authorProfile.data.email }}
+                    </h4>
+                    <h4>
+                        <i class="fa fa-calendar-check-o me-1" aria-hidden="true"></i> {{ authorProfile.data.joined }}
+                    </h4>
+                </div>
+
+                <div class="col-md-6 col-12 my-2 borderLeft">
+                    <a *ngIf="(User | async)" routerLink="/create_blog" class="btn btn-sm btn-dark me-2">Create new blog</a>
+                    <a *ngIf="(User | async)" routerLink="/profile_edit" class="btn btn-sm btn-light" routerLink="/profile_edit">Edit profile</a>
+                    <br>
+                </div>
+
+            </div>
+          </div>
+    </div>
+</div>
+
+<div class="container blogSection">
+    <div class="row py-5">
+    
+            <div class="col-md-9 col-12">
+                
+                <p class="section-title"> <i class="fa fa-paperclip me-2" aria-hidden="true"></i> 
+                    {{ authorProfile.data.first_name+"'s" }} blogs
+                </p>
+
+                <nav aria-label="...">
+                    <ul class="pagination pagination-sm">
+                        <li class="page-item" [class.active]="(page+1) == authorAllBlogs.currentPage" *ngFor="let page of authorAllBlogs.totalPages">
+                            <a class="page-link" (click)="changePage(page+1)"> {{ page+1 }} </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <p *ngIf="authorAllBlogs.error || authorAllBlogs.loading">
+                    {{ authorAllBlogs?.error }}
+                    {{ authorAllBlogs.loading ? 'Loading...' : '' }}
+                </p>
+
+                <div class="row" *ngIf="!authorAllBlogs.error && !authorAllBlogs.loading">
+    
+                    <!-- blogs -->
+                    <p *ngIf="!authorAllBlogs.items.length">
+                        <i class="fa fa-exclamation-triangle me-2" aria-hidden="true"></i> No blogs found!
+                      </p>
+
+                    <div class="col-md-6 col-12" *ngFor="let blog of authorAllBlogs.items">
+                        <div class="card blogs" style="width: 100%;">
+                            <div class="img">
+                                <img [src]="blog.cover_image" class="card-img-top">
+                            </div>
+    
+                            <div class="card-body">
+    
+                              <h5 class="card-title">
+                                  <a [routerLink]="['/blog', blog._id]">
+                                  {{ blog.news_title }}
+                                </a>
+                              </h5>
+                              
+                              <p class="card-text">
+                                <i class="fa fa-user-circle-o" aria-hidden="true"></i> {{ blog.author.first_name }}
+                                <br>
+                                <i class="fa fa-bookmark" aria-hidden="true"></i> {{ blog.category.category }}
+                              </p>
+                            </div>
+                          </div>
+                    </div>
+                    <!-- blogs -->
+                </div>
+
+            </div>
+
+        <div class="col-md-3 col-12">
+            <div *ngIf="!authorProfile.loading && authorProfile.data.first_name">
+                <app-category-component
+                [authorName]="authorProfile.data.first_name"
+                [authorId]="authorProfile.data._id"
+                [categoryId]="categoryId"
+                ></app-category-component>
+            </div>
+        </div>
+
+    </div>
+</div>
